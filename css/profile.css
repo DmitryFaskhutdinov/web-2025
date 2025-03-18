@@ -1,0 +1,77 @@
+.content {
+    display: block;
+    place-items: center; 
+}
+
+.header {
+    height: 73px;
+}
+
+.frame {
+    width: 123px;
+    height: 123px;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    border-radius: 16px;
+    margin: 10px;
+}
+
+.image {
+    max-width: 100%;
+    scale: 120%;
+}
+
+.name {
+    font: 500 32px/1.28 "Golos UI", sans-serif; 
+    letter-spacing: -0.25px;
+    color: #222222;
+    margin: 5px;
+}
+
+.aboutme {
+    width: 361px;
+    text-align: center;
+    font: 500 15px/1.28 "Golos UI", sans-serif;
+    letter-spacing: -0.15px;
+    color: #222222;
+    margin: 5px;
+
+}
+
+.button {
+    padding: 6px 10px 6px 10px;
+    gap: 6px;
+    margin: 6px;
+    border: 0cap;
+    border-radius: 6px;
+    font: 400 15px/1.28 "Golos UI", sans-serif;
+    letter-spacing: -0.15px;
+    margin-bottom: 35px;
+    color: #222222;
+    
+
+}
+
+.gallery {
+    width: 972px;
+    display: grid;
+    grid-template-columns: repeat(3, 322px);
+    justify-content: center;
+    align-items: center; 
+    gap: 2px;
+}
+
+.gallery-frame {
+    width: (972/3)px;
+    height: 322px;
+    cursor: pointer;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    border-radius: 2px;
+}
+
+.images {
+    max-width: 100%;
+}
