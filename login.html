@@ -1,34 +1,24 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <style>
-            
-        </style>
+        <title>Логин</title>
+        <link rel="stylesheet" href="css/login.css">
+        <link rel="stylesheet" href="css/font.css">
     </head>
     <body>
-        <h1>Войти</h1>
-        <div class="frame">
-            <img src="https://shorturl.at/Wfvpn" width="462.08" height="637.93" alt="Login photo">
+        <div class="content">
+            <h1 class="title">Войти</h1>
+            <div class="frame">
+                <img class="images" src="images/login.jpeg" title="Войти" alt="Логин-картинка">
+            </div>
+            <form class="form">
+                <label for="email" class="label">Электропочта</label>
+                <input id="email" type="email" class="input"/>
+                <span class="input-info">Введите электропочту в формате *****@***.**</span>
+                <label for="password" class="label">Пароль</label>
+                <input id="password" type="password" class="input">
+                <button type="submit" class="button">Продолжить</button>
+            </form>
         </div>
-        <form action="" method="post">
-            <div>
-                <label for="email">Электропочта:</label>
-            </div>
-            <div>
-                <input type="text" name="email" id="email" required>
-            </div>
-            <div>
-                <small>Введите электропочту в формате *****@***.**</small>
-            </div>
-            <div>
-                <label for="password">Пароль:</label>
-            </div>
-            <div>
-                <input type="password" name="password" id="password" required>
-            </div>
-            <div>
-                <button type="submit">Продолжить</button>
-            </div>
-          </form>
     </body>
 </html>
