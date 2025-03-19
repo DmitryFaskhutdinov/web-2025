@@ -1,0 +1,32 @@
+.scroll {
+    display: block;
+    max-width: 474px;
+    place-items: center;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    border-radius: 6px;
+    margin: 10px;
+}
+
+.av-image {
+    max-width: 100%;
+}
+
+.gallery {
+    Width: 474px;
+    Height: 474px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.post-img {
+    max-width: 100%;
+}

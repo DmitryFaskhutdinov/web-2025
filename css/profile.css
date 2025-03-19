@@ -1,6 +1,6 @@
 .content {
     display: block;
-    place-items: center; 
+    place-items: center;
 }
 
 .header {
@@ -23,7 +23,7 @@
 }
 
 .name {
-    font: 500 32px/1.28 "Golos UI", sans-serif; 
+    font: 500 32px/1.28 "Golos UI", sans-serif;
     letter-spacing: -0.25px;
     color: #222222;
     margin: 5px;
@@ -49,7 +49,7 @@
     letter-spacing: -0.15px;
     margin-bottom: 35px;
     color: #222222;
-    
+
 
 }
 
@@ -58,7 +58,7 @@
     display: grid;
     grid-template-columns: repeat(3, 322px);
     justify-content: center;
-    align-items: center; 
+    align-items: center;
     gap: 2px;
 }
 

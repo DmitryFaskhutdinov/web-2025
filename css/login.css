@@ -1,6 +1,6 @@
 .content {
     display: block;
-    place-items: center; 
+    place-items: center;
 }
 
 .title {
@@ -9,6 +9,7 @@
     letter-spacing: -1.5px;
     margin: 0;
 }
+
 .frame {
     Width: 462px;
     Height: 501px;
@@ -16,12 +17,10 @@
     margin-bottom: 20px;
     display: flex;
     align-items: center;
-    
 }
 
 .images {
     max-width: 100%
-
 }
 
 .form {
@@ -30,7 +29,7 @@
 
 .label {
     display: block;
-    font: 700 15px/1.2  "Golos UI", sans-serif;
+    font: 700 15px/1.2 "Golos UI", sans-serif;
     color: #222222;
     letter-spacing: -0.5px;
     margin-bottom: 5px;
@@ -60,7 +59,7 @@
 .input-info {
     display: block;
     margin-bottom: 15px;
-    font: 400 15px/1.2  "Golos UI", sans-serif;
+    font: 400 15px/1.2 "Golos UI", sans-serif;
     color: #808080;
 }
 
