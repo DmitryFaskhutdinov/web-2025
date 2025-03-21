@@ -1,7 +1,70 @@
-.scroll {
+/* сброс отступов */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* основной контейнер */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* боковое меню */
+.menu {
+    border-right: 1px solid #2222220D;
+    width: 72px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.menu-header {
+    height: 30px;
+}
+
+.menu-icon {
+    width: 40px;
+    height: 40px;
     display: block;
-    max-width: 474px;
-    place-items: center;
+}
+
+.menu-icon-home {
+    background-image: url("/images/home.svg");
+}
+
+.menu-icon-profile {
+    background-image: url("/images/profile.svg");
+}
+
+.menu-icon-plus {
+    background-image: url("/images/plus.svg");
+}
+
+/* Лента постов */
+.scroll {
+    display: flex;
+    width: 474px;
+    margin-left: auto;
+    margin-right: auto;
+    flex-direction: column;
+    padding-top: 73px;
+}
+
+/* шапка поста */
+.post-head {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+
+}
+
+.avatar-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    color: #222222;
 }
 
 .avatar {
@@ -12,12 +75,26 @@
     align-items: center;
     border-radius: 6px;
     margin: 10px;
+    margin-left: 0px;
 }
 
 .av-image {
     max-width: 100%;
 }
 
+.name {
+    font: 500 14px/1.28 "Golos UI", sans-serif;
+}
+
+.write-button {
+    border: none;
+    background: none;
+    margin-left: auto;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Галлерея поста */
 .gallery {
     Width: 474px;
     Height: 474px;
@@ -25,8 +102,89 @@
     margin-bottom: 20px;
     display: flex;
     align-items: center;
+    margin-bottom: 15px;
+    position: relative;
 }
 
-.post-img {
+.gallery-image {
     max-width: 100%;
+}
+
+/* Кнопки галереи */
+.indicator {
+    font: 400 15px/1.28 "Golos UI", sans-serif;
+    background-color: #22222280;
+    color: #FFFFFF;
+    position: absolute;
+    right: ;
+    left: 425px;
+    top: 20px;
+    border-radius: 15px;
+    padding: 1px 7px 1px 7px;
+}
+.next-image {
+    background-color: #FFFFFF99;
+    color: #222222;
+    position: absolute;
+    left: 443px;
+    border-radius: 25px;
+    border: none;
+    padding: 1px 4px 1px 4px;
+}
+
+/* кнопка с лайками */
+.likes {
+   max-width: 68px;
+   font: 400 15px/1.2 "Golos UI", sans-serif;
+   padding: 6px 12px;
+   border-radius: 8px;
+   display: flex;
+   border: 1px solid #F0F0F0;
+   gap: 3px;
+   margin-bottom: 10px;
+   cursor: pointer;
+}
+
+.likes:focus {
+    background-color: #EF53530D;
+    border: 1px solid #FF000030;
+}
+
+/* основной текст */
+.posttext {
+    font: 400 15px/1.28 "Golos UI", sans-serif;
+    line-height: 18px;
+    letter-spacing: -0.15px;
+    padding: 0px;
+}
+
+.p-text {
+    margin-bottom: auto;
+}
+
+/* кнопка еще */
+.more {
+    padding: 0;
+    margin-bottom: 10px;
+    border: none;
+    background-color: #ffffff;
+    font: 400 15px/1.28 "Golos UI", sans-serif;
+    line-height: 18px;
+    letter-spacing: -0.15px;
+    padding: 0px;
+    color: #808080;
+    cursor: pointer;
+}
+
+/* дата поста */
+.date {
+    font: 400 14px/1.2 "Golos UI", sans-serif;
+    line-height: 18px;
+    letter-spacing: -0.15px;
+    padding: 0px;
+    color: #808080;
+}
+
+.post {
+    margin-bottom: 20px;
 }
