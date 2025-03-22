@@ -1,6 +1,52 @@
-.content {
+/* сброс отступов */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* основной контейнер */
+.container {
+    display: flex;
+}
+
+/* боковое меню */
+.menu {
+    border-right: 1px solid #2222220D;
+    width: 72px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.menu-header {
+    height: 30px;
+}
+
+.menu-icon {
+    width: 40px;
+    height: 40px;
     display: block;
-    place-items: center;
+}
+
+.menu-icon-home {
+    background-image: url("/images/home-no-dot.svg");
+}
+
+.menu-icon-profile {
+    background-image: url("/images/profile-dot.svg");
+}
+
+.menu-icon-plus {
+    background-image: url("/images/plus.svg");
+}
+
+/* Основной контент */
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    padding-top: 73px;
 }
 
 .header {
@@ -42,24 +88,26 @@
 .button {
     padding: 6px 10px 6px 10px;
     gap: 6px;
-    margin: 6px;
-    border: 0cap;
+    border: none;
     border-radius: 6px;
     font: 400 15px/1.28 "Golos UI", sans-serif;
     letter-spacing: -0.15px;
+    margin-top: 15px;
     margin-bottom: 35px;
     color: #222222;
-
-
+    display: flex;
+    align-items: center;
+    cursor: pointer;
 }
 
+/* Галерея */
 .gallery {
     width: 972px;
     display: grid;
     grid-template-columns: repeat(3, 322px);
-    justify-content: center;
     align-items: center;
     gap: 2px;
+    padding-bottom: 30px;
 }
 
 .gallery-frame {
@@ -75,4 +123,3 @@
 .images {
     max-width: 100%;
 }
-

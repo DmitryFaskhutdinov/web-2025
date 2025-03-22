@@ -9,17 +9,24 @@
 </head>
 
 <body>
-    <div class="content">
-        <h1 class="title">Войти</h1>
-        <div class="frame">
-            <img class="images" src="images/login.jpeg" title="Войти" alt="Логин-картинка">
+    <div class="container">
+        <div class="greeting">
+            <h1 class="title">Войти</h1>
+            <div class="frame">
+                <img class="images" src="images/login.jpeg" title="Войти" alt="Логин-картинка">
+            </div>
         </div>
         <form class="form">
             <label for="email" class="label">Электропочта</label>
-            <input id="email" type="email" class="input" />
+            <input id="email" type="email" class="input">
             <span class="input-info">Введите электропочту в формате *****@***.**</span>
             <label for="password" class="label">Пароль</label>
-            <input id="password" type="password" class="input">
+            <div class="pass-contain ">
+                <input id="password" type="password" class="input pass-box">
+                <button type="button" class="eye">
+                    <img class="eye-off" src="images/eye.svg" title="Показать праоль" alt="Иконка глаза">
+                </button>
+            </div>
             <button type="submit" class="button">Продолжить</button>
         </form>
     </div>

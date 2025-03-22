@@ -7,7 +7,6 @@
 /* основной контейнер */
 .container {
     display: flex;
-    height: 100vh;
 }
 
 /* боковое меню */
@@ -17,7 +16,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-sizing: border-box;
 }
 
 .menu-header {
@@ -96,8 +94,8 @@
 
 /* Галлерея поста */
 .gallery {
-    Width: 474px;
-    Height: 474px;
+    width: 474px;
+    height: 474px;
     overflow: hidden;
     margin-bottom: 20px;
     display: flex;
@@ -116,8 +114,7 @@
     background-color: #22222280;
     color: #FFFFFF;
     position: absolute;
-    right: ;
-    left: 425px;
+    right: 10px;
     top: 20px;
     border-radius: 15px;
     padding: 1px 7px 1px 7px;
@@ -126,7 +123,7 @@
     background-color: #FFFFFF99;
     color: #222222;
     position: absolute;
-    left: 443px;
+    right: 10px;
     border-radius: 25px;
     border: none;
     padding: 1px 4px 1px 4px;
@@ -143,6 +140,7 @@
    gap: 3px;
    margin-bottom: 10px;
    cursor: pointer;
+   transition: 0.3s;
 }
 
 .likes:focus {
@@ -158,10 +156,6 @@
     padding: 0px;
 }
 
-.p-text {
-    margin-bottom: auto;
-}
-
 /* кнопка еще */
 .more {
     padding: 0;
@@ -171,7 +165,6 @@
     font: 400 15px/1.28 "Golos UI", sans-serif;
     line-height: 18px;
     letter-spacing: -0.15px;
-    padding: 0px;
     color: #808080;
     cursor: pointer;
 }
@@ -181,10 +174,10 @@
     font: 400 14px/1.2 "Golos UI", sans-serif;
     line-height: 18px;
     letter-spacing: -0.15px;
-    padding: 0px;
     color: #808080;
 }
 
+/* отступ внизу от конца экрана */
 .post {
     margin-bottom: 20px;
 }
