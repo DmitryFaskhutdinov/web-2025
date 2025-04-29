@@ -1,6 +1,6 @@
 function uniqueElements(arr) {
     const counter = {}
-    for (const element of arr) {
+    for (element of arr) {
         const key = String(element)
         if (counter[key]) {
             counter[key] += 1
@@ -13,4 +13,4 @@ function uniqueElements(arr) {
 
 
 
-console.log(uniqueElements(['hello', 'привет', 'apple', 'привет',  1, '1']))
+console.log(uniqueElements(['hello', 'привет', 'hi', 'привет', 1, '1']))
