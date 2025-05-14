@@ -3,12 +3,12 @@
 // const nums = { a: 1, b: 2, c: 3 };
 // mapObject(nums, x => x * 2) // { a: 2, b: 4, c: 6 }
 
-function mapObjects(obj) {
-    const result = obj.map(num => num * 2)
+const nums = { a: 1, b: 2, c: 3 }
+
+function mapObjects(obj, callback) {
+    const result = obj.map(callback)
     return result
 }
-
-const nums = { a: 1, b: 2, c: 3 }
 
 console.log(mapObjects(nums, x => x * 2))
 
