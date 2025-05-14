@@ -26,26 +26,26 @@ function zodiacSign($day, $month) {
     } elseif (($day >= 19 && $month == 2) || ($day <= 20 && $month == 3)) {
         return 'рыбы';
     } else {
-        return 'Несуществующая дата'
+        return 'Несуществующая дата';
     }
 }
 
 function textData($data) {
-    $monthArr = ['january' => 1, 'february' => 1, 'march' => 1, 'april' => 1, 'may' => 1, 'june' => 1, 'july' => 1, 'august' => 1, 'september' => 1, 'october' => 1, 'november' => 1, 'december' => 1, 
-    'январь' => 1, 'февраль' => 1, 'март' => 1, 'апрель' => 1, 'май' => 1, 'июнь' => 1, 'июль' => 1, 'август' => 1, 'сентябрь' => 1, 'октябрь' => 1, 'ноябрь' => 1, 'декабрь' => 1];
+    $monthArr = ['january' => 1, 'february' => 2, 'march' => 3, 'april' => 4, 'may' => 5, 'june' => 6, 'july' => 7, 'august' => 8, 'september' => 9, 'october' => 10, 'november' => 11, 'december' => 12, 
+    'января' => 1, 'февраля' => 2, 'марта' => 3, 'апреля' => 4, 'мая' => 5, 'июня' => 6, 'июля' => 7, 'августа' => 8, 'сентября' => 9, 'октября' => 10, 'ноября' => 11, 'декабря' => 12];
     $data = explode(' ', $data);
     if (count($data) != 3) {
-        return 'Неверный текстовый формат. Введите ''ДД Месяц ГГГГ'''
+        return 'Неверный текстовый формат. Введите ДД Месяц ГГГГ';
     }
     $day = $data[0]; 
     $month = mb_strtolower($data[1]);
     $year = $data[2];   
     if ((int)$day > 31 || !(ctype_digit($day))) {
-        return 'Неверный текстовый формат. День указан некорректно!'
-    } elseif (!(array_key_exists($month, $monthArr, true))) {
-        return 'Неверный месяц'
-    } elseif (!(ctype_digit($year)) || strlen($year) != 4) {
-        return 'Неверный текстовый формат. Год должен быть 4-х значным числом'
+        return 'Неверный текстовый формат. День указан некорректно!';
+    } elseif (!(array_key_exists($month, $monthArr))) {
+        return 'Неверный месяц';
+    } elseif (!(ctype_digit($year)) || mb_strlen($year) != 4) {
+        return 'Неверный текстовый формат. Год должен быть 4-х значным числом';
     } else {
         //проверки успешны
         $month = $monthArr[$month];
@@ -54,60 +54,35 @@ function textData($data) {
 }
 
 function diffData($data) {
-    return 'возврат функции успешен'
-}
-
-function dataForm($data) {
-    if ($data == '') {
-        return 'Пустой ввод';
-    } elseif (strlen($data) > 16) {
-        return 'Слишком длинный ввод'
-    } elseif (strlen($data) == 16) {
-        //Вызов функции на валидацию текстового формата
-        $textFormat = textData($data);
-        return $textFormat;
-    } elseif (strlen($data) == 10) {
-        //Вызов функции на проверку Unix, ISO, Европейский, Американский
-        $diffFormat = diffData($data);
-        return $diffFormat;
+    if (ctype_digit($data)) {
+        return 'Unix';
     } else {
-        return 'Неверный формат';
-    }
+        
+    } 
 }
+// 2015-07-17
+// 17:04:43
+// 17.07.2015
+// american
+
 
 if (isset($_GET['free_zodiac'])) {
     $free_zodiac = ($_GET['free_zodiac']);
-    if ($free_zodiac == '' ) {
-        echo 'пустой ввод'; exit;
+    if ($free_zodiac == '') {
+        echo 'Пустой ввод';
+    } elseif (mb_strlen($free_zodiac) > 17) {
+        echo 'Слишком длинный ввод';
+    } elseif (mb_strlen($free_zodiac) <= 17 && mb_strlen($free_zodiac) != 10 ) {
+        //Вызов функции на валидацию текстового формата
+        $textFormat = textData($free_zodiac);
+        echo $textFormat;
+    } elseif (mb_strlen($free_zodiac) == 10) {
+        //Вызов функции на проверку Unix, ISO, Европейский, Американский
+        $diffFormat = diffData($free_zodiac);
+        echo $diffFormat;
     } else {
-        if (strlen($free_zodiac) <= 16) {
-            if (is_numeric($free_zodiac) && strlen($free_zodiac) == 10) {
-                echo 'Unix Timestamp'; //!
-                $flag = 1;
-            } elseif (is_numeric($free_zodiac) && strlen($free_zodiac) <> 10) {
-                echo 'неверный Unix Timestamp'; exit;
-            } elseif (strlen($free_zodiac) == 10) {
-                if ($free_zodiac[4] == '-' && $free_zodiac[7] == '-') {
-                    echo 'ISO 8601'; //!
-                    $flag = 1;
-                } elseif ($free_zodiac[2] == '.' && $free_zodiac[5] == '.') {
-                    echo 'Европейский (ДД.ММ.ГГГГ)'; //!
-                    $flag = 1;
-                } elseif ($free_zodiac[2] == '/' && $free_zodiac[5] == '/') {
-                    echo 'Американский (ММ/ДД/ГГГГ)'; //!
-                    $flag = 1;
-                } else {
-                    echo 'Неверный формат'; exit;
-                }
-            } else {
-                echo 'Неверный формат'; exit;
-            }
-        } else {
-            echo 'Cлишком длинный ввод'; exit;
-        }
+        echo 'Неверный формат';
     }
-
-
-    echo zodiacSign($day, $month);
 }
 ?>
+

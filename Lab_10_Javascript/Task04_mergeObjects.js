@@ -9,3 +9,6 @@ function mergeObjects(obj1, obj2) {
 
 console.log(mergeObjects({ a: 1, b: 2 }, { b: 3, c: 4 }))
 console.log(mergeObjects({ a: 1, b: 2 }, { c: 3, d: 4 }))
+
+// .some позволяет узнать есть ли в keys1 хотябы 1 элемент удовлетворяющий условию keys2.includes(key)
+// Условие keys2.includes(key) проверяет есть ли элемент массива keys1 в keys2 
