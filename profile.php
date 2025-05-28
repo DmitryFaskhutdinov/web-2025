@@ -31,7 +31,9 @@ if (!$user) {
     exit();
 }
 
-$userPosts = array_filter($posts, fn($post) => $post["userId"] == $userId);
+$userPosts = array_filter($posts, function ($post) use ($userId) {
+    return $post["userId"] == $userId;
+});
 $postCount = count($userPosts);
 
 include "profile_template.php";
