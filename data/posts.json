@@ -1,0 +1,18 @@
+[
+    {
+        "userId": 1,
+        "postId": 1,
+        "images": ["images/1.jpeg", "images/2.jpeg"],
+        "likes": 203,
+        "content": "Так красиво сегодня на улице! Настоящая зима)) Вспоминается Бродский: «Поздно ночью, в уснувшей долине, на самом дне, в гор...»", 
+        "createdAt": 1748104417
+    },
+    {
+        "userId": 2,
+        "postId": 2,
+        "images": ["images/lisa.jpeg"],
+        "likes": 178,
+        "content": "", 
+        "createdAt": 1748104180
+    }
+]

@@ -1,0 +1,18 @@
+[
+    {
+        "userId": 1,
+        "name": "Ваня",
+        "surname": "Денисов",
+        "aboutMe": "Привет! Я системный аналитик в ACME :) Тут моя жизнь только для самых классных!",
+        "avatar": "images/me.jpeg",
+        "registrationDate": 1748092251
+    },
+    {
+        "userId": 2,
+        "name": "Лиза",
+        "surname": "Демина",
+        "aboutMe": "Сообщение, которое написала бы Лиза Демина",
+        "avatar": "images/her.jpeg",
+        "registrationDate": 1748103164
+    }
+]
