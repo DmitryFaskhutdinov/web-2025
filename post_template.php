@@ -1,16 +1,16 @@
 <div class="post">
     <!-- Заголовок поста -->
     <div class="post-head">
-        <a href="profile.php?id=<?= htmlspecialchars($author["userId"] ?? "", ENT_QUOTES) ?>" class="avatar-link">
-            <?php if ($author): ?>
+        <a href="profile.php?id=<?= htmlspecialchars($post["userId"] ?? "", ENT_QUOTES) ?>" class="avatar-link">
+            <?php if (!empty($post["userId"])): ?>
                 <!-- Автар автора поста -->
                 <div class="avatar">
-                    <img class="av-image" src="<?= htmlspecialchars($author["avatar"], ENT_QUOTES) ?>" alt="Аватар" title="Аватар">                        
+                    <img class="av-image" src="images/<?= htmlspecialchars($authorAvatar, ENT_QUOTES) ?>" alt="Аватар" title="Аватар">                        
                 </div>
                 <!-- Имя автора поста -->
                 <div class="name">
-                    <?= htmlspecialchars($author["name"]) ?>
-                    <?= htmlspecialchars($author["surname"]) ?>
+                    <?= htmlspecialchars($authorName) ?>
+                    <?= htmlspecialchars($authorSurname) ?>
                 </div>
             <?php else: ?>
                 <div class="avatar">
@@ -29,7 +29,7 @@
         <div class="gallery">
             <!-- Вывод картинки -->
             <?php foreach ($images as $index => $image): ?>
-                <img class="gallery-image" src="<?= htmlspecialchars($image, ENT_QUOTES) ?>" alt="Пост-картинка" title="Пост-картинка">
+                <img class="gallery-image" src="images/<?= htmlspecialchars($image, ENT_QUOTES) ?>" alt="Пост-картинка" title="Пост-картинка">
             <?php endforeach; ?>
             <!-- Индикатор количества изобаржений -->
             <?php if (count($images) > 1): ?>
@@ -56,5 +56,5 @@
         <button class="more">ещё</button>
     </div>
     <!-- Дата поста -->
-    <span class="date"><?= htmlspecialchars(showData($post["createdAt"] ?? time())) ?></span>
+    <span class="date"><?= htmlspecialchars(showData($post["created_at"] ?? time())) ?></span>
 </div>

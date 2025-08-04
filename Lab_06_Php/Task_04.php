@@ -1,6 +1,6 @@
 <?php
 // Задание 4
-function zodiacSign($day, $month) {
+function getZodiacSign($day, $month) {
     if (($day >= 21 && $month == 3) || ($day <= 19 && $month == 4)) {
         return 'овен';
     } elseif (($day >= 20 && $month == 4) || ($day <= 20 && $month == 5)) {
@@ -30,59 +30,104 @@ function zodiacSign($day, $month) {
     }
 }
 
-function textData($data) {
-    $monthArr = ['january' => 1, 'february' => 2, 'march' => 3, 'april' => 4, 'may' => 5, 'june' => 6, 'july' => 7, 'august' => 8, 'september' => 9, 'october' => 10, 'november' => 11, 'december' => 12, 
-    'января' => 1, 'февраля' => 2, 'марта' => 3, 'апреля' => 4, 'мая' => 5, 'июня' => 6, 'июля' => 7, 'августа' => 8, 'сентября' => 9, 'октября' => 10, 'ноября' => 11, 'декабря' => 12];
-    $data = explode(' ', $data);
-    if (count($data) != 3) {
-        return 'Неверный текстовый формат. Введите ДД Месяц ГГГГ';
-    }
-    $day = $data[0]; 
-    $month = mb_strtolower($data[1]);
-    $year = $data[2];   
-    if ((int)$day > 31 || !(ctype_digit($day))) {
-        return 'Неверный текстовый формат. День указан некорректно!';
-    } elseif (!(array_key_exists($month, $monthArr))) {
-        return 'Неверный месяц';
-    } elseif (!(ctype_digit($year)) || mb_strlen($year) != 4) {
-        return 'Неверный текстовый формат. Год должен быть 4-х значным числом';
-    } else {
-        //проверки успешны
-        $month = $monthArr[$month];
-        return zodiacSign($day, $month); // что должна возвращать функция?
-    }
+function isLeapYear($year) {
+    return (($year % 4 == 0) && ($year % 100 != 0)) || ($year % 400 == 0);
 }
 
-function diffData($data) {
-    if (ctype_digit($data)) {
-        return 'Unix';
+//  проверка реальности даты
+function isRealDate($year, $month, $day) {
+    if ($month < 1 || $month > 12) {
+        return false;
+    }
+    if (isLeapYear($year)) {
+        $feb = 29;
     } else {
-        
-    } 
+        $feb = 28;
+    }
+    $daysInMonth = [0, 31, $feb, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    if ($day < 1 || $day > $daysInMonth[$month]) {
+        return false;
+    }
+    return true;
 }
-// 2015-07-17
-// 17:04:43
-// 17.07.2015
-// american
+
+function monthToNum($monthName) {
+    $monthArr = ['january' => 1, 'february' => 2, 'march' => 3, 'april' => 4, 'may' => 5, 'june' => 6, 'july' => 7, 'august' => 8, 'september' => 9, 'october' => 10, 'november' => 11, 'december' => 12, 
+    'января' => 1, 'февраля' => 2, 'марта' => 3, 'апреля' => 4, 'мая' => 5, 'июня' => 6, 'июля' => 7, 'августа' => 8, 'сентября' => 9, 'октября' => 10, 'ноября' => 11, 'декабря' => 12];
+    $monthName = trim(mb_strtolower($monthName, 'UTF-8'));
+    return $monthArr[$monthName] ?? 0;
+}
+
+function parseDate($date, $divider) {
+    if ($divider === '') {
+        $year = (int)substr($date, 0, 4);
+        $month = (int)substr($date, 4, 2);
+        $day = (int)substr($date, 6, 2);
+    } else {
+        $parts = explode($divider, $date);
+        if (count($parts) != 3) {
+            return 'Недопустимый формат даты';
+        }
+    }   
+    switch($divider) {
+        case '':
+            $parts = [$year, $month, $day];
+            break;
+        case '.':
+            [$day, $month, $year] = $parts;
+            break;
+        case '/':
+            [$month, $day, $year] = $parts;
+            break;
+        case '-':
+            [$year, $month, $day] = $parts;
+            break;
+        case ' ':
+            [$day, $monthName, $year] = $parts;
+            $month = monthToNum($monthName);
+            break;
+        default:
+            return 'Недопустимый формат даты. Используйте ".", "-", "/" или пробел для разделения частей даты.';
+    }
+    if (!ctype_digit((string)$year) || !ctype_digit((string)$month) || !ctype_digit((string)$day)) {
+        return 'Части даты должны быть числами';
+    }
+    $year = (int)$year;
+    $month = (int)$month;
+    $day = (int)$day;
+    if (!isRealDate($year, $month, $day)) {
+        return 'Такой даты не существует';
+    }
+    return ['year' => $year, 'month' => $month, 'day' => $day];
+}
 
 
 if (isset($_GET['free_zodiac'])) {
-    $free_zodiac = ($_GET['free_zodiac']);
-    if ($free_zodiac == '') {
+    $input = trim($_GET['free_zodiac']);
+
+    if ($input === '') {
         echo 'Пустой ввод';
-    } elseif (mb_strlen($free_zodiac) > 17) {
-        echo 'Слишком длинный ввод';
-    } elseif (mb_strlen($free_zodiac) <= 17 && mb_strlen($free_zodiac) != 10 ) {
-        //Вызов функции на валидацию текстового формата
-        $textFormat = textData($free_zodiac);
-        echo $textFormat;
-    } elseif (mb_strlen($free_zodiac) == 10) {
-        //Вызов функции на проверку Unix, ISO, Европейский, Американский
-        $diffFormat = diffData($free_zodiac);
-        echo $diffFormat;
+    } elseif (ctype_digit($input) && strlen($input) === 8) {
+        // YYYYMMDD
+        $divider = '';
+    } elseif (strpos($input, '.') !== false) {
+        // DD.MM.YYYY
+        $divider = '.';
+    } elseif (strpos($input, '/') !== false) {
+        // MM/DD/YYYY
+        $divider = '/';
+    } elseif (strpos($input, '-') !== false) {
+        // YYYY-MM-DD
+        $divider = '-';
     } else {
-        echo 'Неверный формат';
+        // Текстовый формат: "2 июля 2004", "02 Март 2023", etc.
+        $divider = ' ';
+    }
+    $result = parseDate($input, $divider);
+    if (is_array($result)) {
+        echo getZodiacSign($result['day'], $result['month']);
+    } else {
+        echo "Ошибка: " . $result;
     }
 }
 ?>
-

@@ -16,18 +16,19 @@
                 <img class="images" src="images/login.jpeg" title="Войти" alt="Логин-картинка">
             </div>
         </div>
-        <form class="form">
+        <form class="form" action="api.php?act=login" method="POST">
             <label for="email" class="label">Электропочта</label>
-            <input id="email" type="email" class="input">
+            <input id="email" name="email" type="email" class="input" required>
             <span class="input-info">Введите электропочту в формате *****@***.**</span>
             <label for="password" class="label">Пароль</label>
             <div class="pass-contain ">
-                <input id="password" type="password" class="input pass-box">
+                <input id="password" name="password" type="password" class="input pass-box" required>
                 <button type="button" class="eye">
                     <img class="eye-off" src="images/eye.svg" title="Показать праоль" alt="Иконка глаза">
                 </button>
             </div>
             <button type="submit" class="button">Продолжить</button>
+            <span class="register">Еще нет аккаунта? <a href="register.php" class="register-link">Зарегистрируйтесь</a></span>
         </form>
     </div>
 </body>

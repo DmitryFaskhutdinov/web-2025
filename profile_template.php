@@ -26,7 +26,7 @@
         <div class="content">
             <!-- Аватар -->
             <div class="frame">
-                <img class="image" src="<?= htmlspecialchars($user["avatar"] ?? "images/default-avatar.png", ENT_QUOTES) ?>" title="Аватар" alt="Аватар пользователя">
+                <img class="image" src="images/<?= htmlspecialchars($user["avatar"] ?? "images/default-avatar.png", ENT_QUOTES) ?>" title="Аватар" alt="Аватар пользователя">
             </div>
 
             <!-- Имя -->
@@ -36,8 +36,8 @@
             </h1>
 
             <!-- Обо мне -->
-            <?php if (!empty($user["aboutMe"])): ?>
-                <p class="aboutme"><?= htmlspecialchars($user["aboutMe"]) ?></p>
+            <?php if (!empty($user["about_me"])): ?>
+                <p class="aboutme"><?= htmlspecialchars($user["about_me"]) ?></p>
             <?php endif; ?>
 
             <!-- Количество постов -->
@@ -48,14 +48,10 @@
 
             <!-- Галерея -->
             <div class="gallery">
-                <?php foreach ($userPosts as $post): ?>
-                    <?php if (!empty($post["images"])): ?>
-                        <?php foreach ($post["images"] as $image): ?>
-                            <div class="gallery-frame">
-                                <img class="images" src="<?= htmlspecialchars($image, ENT_QUOTES) ?>" title="Изображение пользователя" alt="Изображение пользователя">
-                            </div>
-                        <?php endforeach; ?>    
-                    <?php endif; ?>
+                <?php foreach ($images as $image): ?>
+                    <div class="gallery-frame">
+                        <img class="images" src="images/<?= htmlspecialchars($image, ENT_QUOTES) ?>" title="Изображение пользователя" alt="Изображение пользователя">
+                    </div>
                 <?php endforeach; ?>
             </div>
         </div>

@@ -1,63 +1,32 @@
 <?php
-$usersJson = file_get_contents("data/users.json");
-$postsJson = file_get_contents("data/posts.json");
-if ($usersJson === false || $postsJson === false) {
-    echo "Ошибка загрузки JSON-файлов";
-}
+session_start();
+date_default_timezone_set('Europe/Moscow');
+require_once 'db.php';
 
-$users = json_decode($usersJson, true);
-$posts = json_decode($postsJson, true);
+$connection = connectToDb();
+$posts = getPostFromDb($connection);
 
-if (json_last_error() !== JSON_ERROR_NONE) {
-    echo "Ошибка JSON: " . json_last_error_msg();
-}
-
-$usersById = array_column($users, null, 'userId');
+$userId = $_SESSION['user_id'] ?? null;
 
 function showData($date) {
     $currentTime = time();
-    $diff = $currentTime - $date;
-    if ($diff < 86400) {
+    $timestamp = strtotime($date); 
+    $diff = $currentTime - $timestamp;
+
+    if ($diff < 60) {
+        return 'только что'; // в пределах первой минуты
+    } elseif ($diff < 3600) {
+        $minutes = floor($diff / 60);
+        return "$minutes минут назад";
+    } elseif ($diff < 86400) {
         $hours = floor($diff / 3600);
         return "$hours часов назад";
     } else {
-        return date("d.m.Y H:i", $date);
+        return date("d.m.Y H:i", $timestamp);
     }
 }
+
+include 'home_template.php';
+
 ?>
 
-<!DOCTYPE html>
-<html lang="ru">
-
-<head>
-    <meta charset="UTF-8"> 
-    <title>Главная страница</title>
-    <link rel="stylesheet" href="css/home.css">
-    <link rel="stylesheet" href="css/font.css">
-</head>
-
-<body>
-    <div class="container">
-        <div class="menu">
-            <header class="menu-header"></header>
-            <a href="http://localhost/home.php" class="menu-icon-wrapper">
-                <span class="menu-icon menu-icon-home"></span>
-            </a>
-            <a href="http://localhost/profile.php" class="menu-icon-wrapper">
-                <span class="menu-icon menu-icon-profile"></span>
-            </a>
-            <a href="+" class="menu-icon-wrapper">
-                <span class="menu-icon menu-icon-plus"></span>
-            </a>
-        </div>
-        <div class="scroll">
-            <?php foreach ($posts as $post): 
-                $author = $usersById[$post["userId"]] ?? null;
-                $images = $post["images"] ?? [];
-                include 'post_template.php'; 
-            endforeach; ?>
-        </div>
-    </div>
-</body>
-
-</html>
