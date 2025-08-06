@@ -18,25 +18,25 @@
     align-items: center;
 }
 
-.menu-header {
+.menu__header {
     height: 30px;
 }
 
-.menu-icon {
+.menu__icon {
     width: 40px;
     height: 40px;
     display: block;
 }
 
-.menu-icon-home {
+.menu__icon_type_home {
     background-image: url("/images/home-no-dot.svg");
 }
 
-.menu-icon-profile {
+.menu__icon_type_profile {
     background-image: url("/images/profile-dot.svg");
 }
 
-.menu-icon-plus {
+.menu__icon_type_plus {
     background-image: url("/images/plus.svg");
 }
 
@@ -53,7 +53,7 @@
     height: 73px;
 }
 
-.frame {
+.content__frame {
     width: 123px;
     height: 123px;
     display: flex;
@@ -63,19 +63,19 @@
     margin: 10px;
 }
 
-.image {
+.content__avatar {
     max-width: 100%;
-    scale: 120%;
+    transform: scale(1.2);
 }
 
-.name {
+.content__name {
     font: 500 32px/1.28 "Golos UI", sans-serif;
     letter-spacing: -0.25px;
     color: #222222;
     margin: 5px;
 }
 
-.aboutme {
+.content__aboutme {
     width: 361px;
     text-align: center;
     font: 500 15px/1.28 "Golos UI", sans-serif;
@@ -85,8 +85,8 @@
 
 }
 
-.button {
-    padding: 6px 10px 6px 10px;
+.content__button {
+    padding: 6px 10px;
     gap: 6px;
     border: none;
     border-radius: 6px;
@@ -101,7 +101,7 @@
 }
 
 /* Галерея */
-.gallery {
+.content__gallery {
     width: 972px;
     display: grid;
     grid-template-columns: repeat(3, 322px);
@@ -110,8 +110,7 @@
     padding-bottom: 30px;
 }
 
-.gallery-frame {
-    width: (972/3)px;
+.content__gallery-frame {
     height: 322px;
     cursor: pointer;
     display: flex;
@@ -120,6 +119,6 @@
     border-radius: 2px;
 }
 
-.images {
+.content__gallery-image {
     max-width: 100%;
 }
