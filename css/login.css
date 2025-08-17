@@ -6,7 +6,7 @@
 }
 
 /* основной контейнер */
-.container {
+.login {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -14,11 +14,11 @@
     height: 100vh;
 }
 /* заголовок и изобаржение */
-.greeting {
+.login__greeting{
     position: relative;
 }
 
-.title {
+.login__title {
     font: 700 140px/1.28 "Golos UI", sans-serif;
     color: #222222;
     letter-spacing: -1.5px;
@@ -27,7 +27,7 @@
     right: 170px;
 }
 
-.frame {
+.login__frame {
     width: 462px;
     height: 501px;
     overflow: hidden;
@@ -36,12 +36,16 @@
     justify-content: center;
 }
 
-.images {
+.login__image {
     max-width: 100%
 }
 
 /* форма */
-.label {
+.login__form {
+    position: relative;
+}
+
+.login__label {
     display: block;
     font: 700 15px/1.2 "Golos UI", sans-serif;
     color: #222222;
@@ -49,7 +53,7 @@
     margin-bottom: 5px;
 }
 
-.input {
+.login__input {
     display: block;
     margin-bottom: 5px;
     width: 100%;
@@ -62,27 +66,35 @@
     outline: none;
 }
 
-.input:focus {
+.login__input.error {
+    border: 1px solid #E64646;
+}
+
+.login__input:focus {
     border: 1px solid #3F8AE0;
 }
 
-.input-info {
+.login__input-info {
     display: block;
     margin-bottom: 15px;
     font: 400 15px/1.2 "Golos UI", sans-serif;
     color: #808080;
 }
 
+.login__input-info.error {
+    color: #E64646;
+}
+
 /* кнопка "Показать пароль" */
-.pass-box {
+.login__pass-box {
     padding-right: 40px;
 }
 
-.pass-contain {
+.login__pass-container {
     position: relative;
 }
 
-.eye {
+.login__eye-button {
     border: none;
     background-color: transparent;
     cursor: pointer;
@@ -90,10 +102,12 @@
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
 }
 
 /* кнопка отправки формы */
-.button {
+.login__submit-button {
     display: block;
     margin-top: 32px;
     width: 100%;
@@ -107,12 +121,12 @@
     cursor: pointer;
 }
 
-.button:focus {
+.login__submit-button:focus {
     border: 2px solid #3F8AE0;
 }
 
 /* предложение регистрации */
-.register {
+.login__register {
     display: block;
     text-align: center;
     margin-top: 10px;
@@ -120,11 +134,26 @@
     color: #808080;
 }
 
-.register-link {
+.login__register-link {
     color: #007bff;
     text-decoration: none;
 }
 
-.register-link:hover {
+.login__register-link:hover {
     text-decoration: underline;
+}
+
+.login__error-box {
+    width: 100%;
+    border: 1px solid #F2F3F5;
+    background-color: #FFECEC;
+    border-radius: 10px;
+    padding: 15px 12px;
+    font: 400 15px/1.2 "Golos UI", sans-serif;
+    transition: border 0.3s ease;
+    outline: none;
+    margin-bottom: 15px;
+    position: absolute;
+    top: -20%;
+    display: none; 
 }

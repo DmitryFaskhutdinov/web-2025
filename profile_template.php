@@ -13,10 +13,10 @@
             <a href="home.php" class="menu__link">
                 <span class="menu__icon menu__icon_type_home"></span>
             </a>
-            <a href="profile.php" class="menu__link">
+            <a href="<?php echo $currentUserId ? "profile.php?id=$currentUserId" : "login.html"; ?>" class="menu__link">
                 <span class="menu__icon menu__icon_type_profile"></span>
             </a>
-            <a href="+" class="menu__link">
+            <a href="<?php echo $userId ? "create_post.php" : "login.html"; ?>" class="menu__link">
                 <span class="menu__icon menu__icon_type_plus"></span>
             </a>
         </div>

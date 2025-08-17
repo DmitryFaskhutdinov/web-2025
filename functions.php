@@ -4,11 +4,11 @@ const IMAGE_EXT = '.png';
 const TITLE_MAX_LENGTH = 255;
 const IMAGE_MAX_LENGTH = 50;
 const IMAGE_MAX_RANDOM = 5;
-const IMAGE_TYPE = 'image/png';
+const IMAGE_TYPES = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/webp'];
 const IMAGE_SIZE = 1024 * 1024;
 
 function validateTitle(string $title): bool {
-    $isValidChars = preg_match('/^[A-Za-zА-Яа-я\s]+$/u', $title);
+    $isValidChars = preg_match('/^[\p{L}\s.,!«»:—-]+$/u', $title);
     $isValidLength = mb_strlen($title) <= TITLE_MAX_LENGTH;
     return $isValidChars && $isValidLength;
 }
@@ -26,7 +26,7 @@ function hasValidImages(): bool {
 }
 
 function validateImage(string $type, int $size): bool {
-    return $type === IMAGE_TYPE && $size <= IMAGE_SIZE;
+    return in_array($type, IMAGE_TYPES) && $size <= IMAGE_SIZE;
 }
 
 function generateImageName(string $title): string {

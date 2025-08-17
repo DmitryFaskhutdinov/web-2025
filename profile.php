@@ -1,5 +1,8 @@
 <?php
-require_once 'db.php'; // Подключение к БД и функции
+session_start();
+$currentUserId = $_SESSION['user_id'] ?? null;
+
+require_once 'db.php';
 
 $connection = connectToDb();
 

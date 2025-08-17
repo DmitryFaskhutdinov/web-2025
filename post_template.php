@@ -26,11 +26,13 @@
     </div>
     <!-- Галерея -->
     <?php if (!empty($images)): ?>
-        <div class="post__gallery">
-            <!-- Вывод картинки -->
-            <?php foreach ($images as $index => $image): ?>
-                <img class="gallery__image" src="images/<?= htmlspecialchars($image, ENT_QUOTES) ?>" alt="Пост-картинка" title="Пост-картинка">
-            <?php endforeach; ?>
+        <div class="post__gallery modal__gallery">
+            <div class="gallery__track">
+                <!-- Вывод картинки -->
+                <?php foreach ($images as $index => $image): ?>
+                    <img class="gallery__image" src="images/<?= htmlspecialchars($image, ENT_QUOTES) ?>" alt="Пост-картинка" title="Пост-картинка">
+                <?php endforeach; ?>
+            </div>
             <!-- Индикатор количества изобаржений -->
             <?php if (count($images) > 1): ?>
                 <div class="gallery__indicator">
@@ -40,7 +42,10 @@
             <!-- Кнопка переключения изображения -->
             <?php if (count($images) > 1): ?>
                 <button class="gallery__next-image">
-                    <img src="images/sign.svg" alt="Листать" title="Листать">
+                    <img src="images/Arrow-right 10.svg" alt="Листать" title="Листать">
+                </button>
+                <button class="gallery__last-image">
+                    <img src="images/Arrow-left 10.svg" alt="Листать" title="Листать">
                 </button>
             <?php endif; ?>
         </div>

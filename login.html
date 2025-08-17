@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <title>Логин</title>
     <link rel="stylesheet" href="css/login.css">
     <link rel="stylesheet" href="css/font.css">
+    <script src="js/login.js" defer></script>
 </head>
-
 <body>
-    <div class="container">
-        <div class="greeting">
-            <h1 class="title">Войти</h1>
-            <div class="frame">
-                <img class="images" src="images/login.jpeg" title="Войти" alt="Логин-картинка">
+    <div class="login">
+        <div class="login__greeting">
+            <h1 class="login__title">Войти</h1>
+            <div class="login__frame">
+                <img class="login__image" src="images/login.jpeg" title="Войти" alt="Логин-картинка">
             </div>
         </div>
-        <form class="form" action="api.php?act=login" method="POST">
-            <label for="email" class="label">Электропочта</label>
-            <input id="email" name="email" type="email" class="input" required>
-            <span class="input-info">Введите электропочту в формате *****@***.**</span>
-            <label for="password" class="label">Пароль</label>
-            <div class="pass-contain ">
-                <input id="password" name="password" type="password" class="input pass-box" required>
-                <button type="button" class="eye">
-                    <img class="eye-off" src="images/eye.svg" title="Показать праоль" alt="Иконка глаза">
+        <form class="login__form" action="api.php?act=login" method="POST" novalidate>
+            <div class="login__error-box"></div>
+            <label for="email" class="login__label">Электропочта</label>
+            <input id="email" name="email" type="email" class="login__input" required>
+            <span class="login__input-info">Введите электропочту в формате *****@***.**</span>
+            <label for="password" class="login__label">Пароль</label>
+            <div class="login__pass-container ">
+                <input id="password" name="password" type="password" class="login__input login__pass-box" required>
+                <button type="button" class="login__eye-button">
+                    <img class="login__eye-img login__eye-img--off" src="images/eye.svg" title="Показать праоль">
+                    <img class="login__eye-img login__eye-img--on" src="images/eye-open-black.svg?v=2" title="Скрыть пароль" style="display:none;">
                 </button>
             </div>
-            <button type="submit" class="button">Продолжить</button>
-            <span class="register">Еще нет аккаунта? <a href="register.php" class="register-link">Зарегистрируйтесь</a></span>
+            <button type="submit" class="login__submit-button">Продолжить</button>
+            <span class="login__register">Еще нет аккаунта? <a href="register.php" class="login__register-link">Зарегистрируйтесь</a></span>
         </form>
     </div>
 </body>
-
 </html>

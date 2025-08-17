@@ -30,5 +30,4 @@ switch ($act) {
         echo getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_ACT);
         die();
 }
-
 ?>
