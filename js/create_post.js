@@ -97,13 +97,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
   updateButtonState();
 
-  submitButton.addEventListener("click", (event) => {
-    event.preventDefault(); // чтобы форма не отправлялась сразу
+  submitButton.addEventListener("click", async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    const postData = {
+      content: textArea.value.trim()
+    };
+    formData.append("json", JSON.stringify(postData));
+
+    Array.from(oneFileInput.files).forEach(file => formData.append("image[]", file));
+    Array.from(multiFileInput.files).forEach(file => formData.append("image[]", file));
 
     console.log("=== Информация о посте ===");
     console.log("Текст:", textArea.value.trim());
     console.log("Файлы (одиночная загрузка):", oneFileInput.files);
     console.log("Файлы (множественная загрузка):", multiFileInput.files);
     console.log("============================");
+
+    try {
+      const response = await fetch("api.php?act=uploader", {
+        method: "POST",
+        body: formData
+      });
+      const result = await response.json();
+      console.log(result);
+
+      if (result.status === "ok") {
+        alert("Пост успешно создан!");
+        textArea.value = "";
+        oneFileInput.value = "";
+        multiFileInput.value = "";
+        updateButtonState();
+      } else {
+        alert("Ошибка: " + result.message);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Произошла ошибка при отправке поста.");
+    }
   });
 });

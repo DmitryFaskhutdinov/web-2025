@@ -56,7 +56,10 @@ function uploadData(): string {
         return getResponse(STATUS_ERROR, MESSAGE_INVALID_AUTORISATION );
     }
 
-    $content = isset($_POST['content']) ? trim($_POST['content']) : '';
+    $jsonInput = $_POST['json'] ?? '';
+    $data = json_decode($jsonInput, true);
+    $content = isset($data['content']) ? trim($data['content']) : ''; 
+
     $hasText = ($content !== '');
 
     $filenames = [];

@@ -8,7 +8,7 @@ const IMAGE_TYPES = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image
 const IMAGE_SIZE = 1024 * 1024;
 
 function validateTitle(string $title): bool {
-    $isValidChars = preg_match('/^[\p{L}\s.,!«»:—-]+$/u', $title);
+    $isValidChars = preg_match('/^[\p{L}\d\s.,!?"«»:—\-()]+$/u', $content);
     $isValidLength = mb_strlen($title) <= TITLE_MAX_LENGTH;
     return $isValidChars && $isValidLength;
 }

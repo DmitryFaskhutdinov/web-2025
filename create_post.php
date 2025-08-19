@@ -28,6 +28,7 @@ $userId = $_SESSION['user_id'] ?? null;
             </div>
             <!-- Создать пост -->
              <form class="form" action='api.php?act=uploader' enctype='multipart/form-data' method='POST'>
+                <input type="hidden" name="json" id="jsonInput">
                 <div class="form__gallery">
                     <div class="form__photo-frame">
                         <div class="frame__track"></div>
