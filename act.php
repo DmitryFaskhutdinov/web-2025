@@ -4,6 +4,7 @@ const ACT_UPLOADER = 'uploader';
 const ACT_REGISTER = 'register';
 const ACT_LOGIN = 'login';
 const ACT_LOGOUT ='logout';
+const ACT_LIKE = 'like';
 
 const STATUS_ERROR = 'error';
 const STATUS_OK = 'ok';
@@ -30,6 +31,9 @@ const MESSAGE_INVALID_DB_CONNECTION = 'Произошла ошибка серв�
 const MESSAGE_INVALID_FIELDS = 'Поля не заполнены';
 const MESSAGE_INVALID_MAIL_OR_PASS = 'Неверный email или пароль';
 
+// лайки
+const MESSAGE_INVALID_POST_ID = 'post_id is required';
+
 function getResponse(string $status, string $message): string {
     $response = [
         'status' => $status,
@@ -38,9 +42,14 @@ function getResponse(string $status, string $message): string {
     return json_encode($response);
 }
 
-function uploadData(): string {
+function ensureSession() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+}
 
-    session_start();
+function uploadData(): string {
+    ensureSession();
     $userId = $_SESSION['user_id'] ?? null;
 
     if (!$userId) {
@@ -173,7 +182,7 @@ function loginUser() {
         return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_MAIL_OR_PASS);
     }
 
-    session_start();
+    ensureSession();
     $_SESSION['user_id'] = $user['user_id'];
 
     return getResponse(status: STATUS_OK, message: '');
@@ -182,6 +191,36 @@ function loginUser() {
 
 function logoutAction(): string {
     logoutUser(); // Функция уже есть в functions.php, нужно подумать над структурой проекта
-    return getResponse(STATUS_OK, '');
+    return getResponse(status: STATUS_OK, message: '');
+}
+
+function likeAction(): string {
+    ensureSession();
+    $userId = $_SESSION['user_id'] ?? null;
+    if ($userId === null) {
+        return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_AUTORISATION );
+    }
+
+    $postId = $_POST['post_id'] ?? null;
+    if ($postId === null || !is_numeric($postId)) {
+        return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_POST_ID); // 'post_id is required'
+    }
+    $postId = (int)$postId;
+    
+
+    $connection = connectToDb();
+    if (!$connection) {
+        return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_DB_CONNECTION);
+    }
+
+    $isLiked = switchLike($connection, $userId, $postId);
+    $likeCount = getLikeCount($connection, $postId);
+
+    return json_encode([
+        'status' => STATUS_OK,
+        'message' => '',
+        'liked' => $isLiked,
+        'likes' => $likeCount
+    ]);
 }
 ?>

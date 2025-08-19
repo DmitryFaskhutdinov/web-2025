@@ -100,10 +100,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // кнопка еще
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".post").forEach(post => {
-        const content = post.querySelector(".post__content");
-        const moreBtn = post.querySelector(".post__more-button");
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.post').forEach(post => {
+        const content = post.querySelector('.post__content');
+        const moreBtn = post.querySelector('.post__more-button');
 
         if (!content || !moreBtn) return;
 
@@ -111,18 +111,57 @@ document.addEventListener("DOMContentLoaded", function () {
         const maxHeight = lineHeight * 2;
 
         if (content.scrollHeight <= maxHeight) {
-            moreBtn.style.display = "none";
+            moreBtn.style.display = 'none';
             return;
         }
 
-        moreBtn.addEventListener("click", function () {
-            if (content.classList.contains("expanded")) {
-                content.classList.remove("expanded");
-                moreBtn.textContent = "ещё";
+        moreBtn.addEventListener('click', function () {
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                moreBtn.textContent = 'ещё';
             } else {
-                content.classList.add("expanded");
-                moreBtn.textContent = "свернуть";
+                content.classList.add('expanded');
+                moreBtn.textContent = 'свернуть';
             }
         });
     });
+});
+
+//обработка лайков
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.post__likes').forEach(button => {
+    button.addEventListener('click', async () => {
+      const postId = button.dataset.postId;
+      const likesScore = button.querySelector('.likes__score');
+      const errorSpan = document.querySelector('.likes__errors');
+      if (!likesScore) return;
+
+      errorSpan.textContent = '';
+      errorSpan.style.display = 'none';
+
+      try {
+        const response = await fetch('api.php?act=like', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `post_id=${encodeURIComponent(postId)}`
+        });
+
+        const result = await response.json();
+        if (result.status === 'ok') {
+          likesScore.textContent = result.likes;
+          if (result.liked) {
+            button.classList.add('liked');
+          } else {
+            button.classList.remove('liked');
+          }
+        } else {
+          errorSpan.textContent = 'Не удалось поставить лайк. Попробуйте снова';
+          errorSpan.style.display = '';
+        }
+      } catch (err) {
+        errorSpan.textContent = 'Сервер недоступен. Попробуйте позже';
+        errorSpan.style.display = '';
+      }
+    });
+  });
 });

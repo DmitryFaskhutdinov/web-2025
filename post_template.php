@@ -51,10 +51,13 @@
         </div>
     <?php endif; ?>
     <!-- Лайки -->
-    <button class="post__likes" type="button">
-        <img class="likes__heart-image"  src="images/heart.png" alt="Реакции" title="Реакции">
-        <span class="likes__score"><?= htmlspecialchars((string)($post["likes"] ?? 0)) ?></span>
-    </button>
+    <div class="post__like-container">
+        <button class="post__likes <?php echo $post['liked'] ? 'liked' : ''; ?>" type="button" data-post-id="<?= $post['post_id'] ?>">
+            <img class="likes__heart-image"  src="images/heart.png" alt="Реакции" title="Реакции">
+            <span class="likes__score"><?= htmlspecialchars((string)($post["likes"] ?? 0)) ?></span>
+        </button>
+        <span class="likes__errors">Ошибка!</span>
+    </div>
     <!-- Контент -->
     <div class="post__text">
         <p class="post__content"><?= htmlspecialchars($post["content"] ?? "") ?></p>

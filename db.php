@@ -10,10 +10,10 @@ function connectToDb(): PDO {
     return new PDO($dsn, username: DB_USER, password: DB_PASS);
 }
 
-function getPostFromDb(PDO $connection, int $limit = 100): array {
+function getPostFromDb(PDO $connection, $userId, int $limit = 100): array {
     $query = <<<SQL
         SELECT
-            p.post_id, p.likes, p.content, p.created_at,
+            p.post_id, p.content, p.created_at,
             u.user_id, u.name, u.surname, u.avatar,
             pi.image_path
         FROM
@@ -39,7 +39,8 @@ function getPostFromDb(PDO $connection, int $limit = 100): array {
             $posts[$postId] = [
                 'post_id' => $postId,
                 'userId' => $row['user_id'],
-                'likes' => $row['likes'],
+                'likes' => getLikeCount($connection, $postId),
+                'liked' => isLikedByUser($connection, $userId, $postId),
                 'content' => $row['content'],
                 'created_at' => $row['created_at'],
                 'name' => $row['name'],
@@ -152,4 +153,38 @@ function savePostToDb(PDO $connection, int $userId, string $content, array $file
     return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+function switchLike(PDO $connection, int $userId, int $postId): bool {
+    $statement = $connection->prepare("SELECT 1 FROM post_like WHERE post_id = ? AND user_id = ?");
+    $statement->execute([$postId, $userId]);
+    $exists = (bool)$statement->fetchColumn();
+
+    if ($exists) {
+        //
+        $delete = $connection->prepare("DELETE FROM post_like WHERE post_id = ? AND user_id = ?");
+        $delete->execute([$postId, $userId]);
+        return false;
+    } else {
+        //
+        $insert = $connection->prepare("INSERT INTO post_like (post_id, user_id) VALUES (?, ?)");
+        $insert->execute([$postId, $userId]);
+        return true;
+    }
+}
+
+function getLikeCount(PDO $connection, $postId): int {
+    $statement = $connection->prepare("SELECT COUNT(*) FROM post_like WHERE post_id = ?");
+    $statement->execute([$postId]);
+    return (int)$statement->fetchColumn();
+}
+
+function isLikedByUser(PDO $connection, int $userId, int $postId): bool {
+    if (!$userId) {
+        return false;
+    }
+    $statement = $connection->prepare("SELECT 1 FROM post_like WHERE post_id = ? AND user_id = ?");
+    $statement->execute([$postId, $userId]);
+    return (bool)$statement->fetchColumn();
+}
 ?>

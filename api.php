@@ -1,4 +1,6 @@
 <?php 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 require_once 'functions.php';
 require_once 'db.php';
@@ -25,6 +27,9 @@ switch ($act) {
         break;
     case ACT_LOGOUT:
         echo logoutAction();
+        break;
+    case ACT_LIKE:
+        echo likeAction();
         break;
     default:
         echo getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_ACT);

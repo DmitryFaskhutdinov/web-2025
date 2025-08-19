@@ -4,9 +4,8 @@ date_default_timezone_set('Europe/Moscow');
 require_once 'db.php';
 
 $connection = connectToDb();
-$posts = getPostFromDb($connection);
-
-$userId = $_SESSION['user_id'] ?? null;
+$userId = $_SESSION['user_id'] ?? 0;
+$posts = getPostFromDb($connection, $userId);
 
 function showData($date) {
     $currentTime = time();
@@ -27,6 +26,5 @@ function showData($date) {
 }
 
 include 'home_template.php';
-
 ?>
 
