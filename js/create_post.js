@@ -1,3 +1,4 @@
+aaaa0.
 //галерея сохранения поста
 document.addEventListener("DOMContentLoaded", function () {
   const gallery = document.querySelector('.form__gallery');
@@ -20,6 +21,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (images.length === 0) {
       nextButton.style.display = 'none';
       lastButton.style.display = 'none';
+      frameButton.style.display = '';
+      framePlaceholder.style.display = '';
       return;
     }
 
@@ -74,21 +77,24 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
   updateGallery();
-});
 
-// Задизейбливание кнопки и вывод данных поста в консоль
-document.addEventListener("DOMContentLoaded", () => {
+// Задизейбливание кнопки
   const submitButton = document.querySelector(".frame__submit");
   const textArea = document.querySelector("textarea[name='content']");
   const oneFileInput = document.getElementById("oneFileInput");
   const multiFileInput = document.getElementById("multFileInput");
 
+  const errorBox = document.querySelector(".frame__error-box");
+  const succesBox = document.querySelector(".post-saved");
+  const formBox = document.querySelector(".form");
+
   function updateButtonState() {
     const hasText = textArea.value.trim() !== "";
     const hasOneFile = oneFileInput.files.length > 0;
     const hasMultiFile = multiFileInput.files.length > 0;
+    const hasExistingImages = track.querySelectorAll('img').length > 0;
 
-    submitButton.disabled = !(hasText && (hasOneFile || hasMultiFile));
+    submitButton.disabled = !(hasText && (hasOneFile || hasMultiFile || hasExistingImages));
   }
 
   textArea.addEventListener("input", updateButtonState);
@@ -101,40 +107,58 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
 
     const formData = new FormData();
+    const postId = formBox.dataset.postId;
     const postData = {
-      content: textArea.value.trim()
+      content: textArea.value.trim(),
     };
+
+    if (postId) {
+      postData.post_id = postId;
+    }
+    
     formData.append("json", JSON.stringify(postData));
 
     Array.from(oneFileInput.files).forEach(file => formData.append("image[]", file));
     Array.from(multiFileInput.files).forEach(file => formData.append("image[]", file));
 
-    console.log("=== Информация о посте ===");
-    console.log("Текст:", textArea.value.trim());
-    console.log("Файлы (одиночная загрузка):", oneFileInput.files);
-    console.log("Файлы (множественная загрузка):", multiFileInput.files);
-    console.log("============================");
+    const act = formBox.action.split("act=")[1];
 
     try {
-      const response = await fetch("api.php?act=uploader", {
+
+      console.log("FormData содержимое:");
+      for (let [key, value] of formData.entries()) {
+          console.log(key, value);
+      }
+      
+      const response = await fetch(`api.php?act=${act}`, {
         method: "POST",
         body: formData
       });
+
+      if (!response.ok) {
+        const text = await response.text();
+        console.error("Ошибка от сервера:", text);
+        throw new Error("Сервер вернул ошибку " + response.status);
+      }
+
       const result = await response.json();
-      console.log(result);
 
       if (result.status === "ok") {
-        alert("Пост успешно создан!");
+        formBox.style.display = "none";
+        succesBox.style.display = "flex";
+        errorBox.style.display = "none"; 
         textArea.value = "";
         oneFileInput.value = "";
         multiFileInput.value = "";
         updateButtonState();
       } else {
-        alert("Ошибка: " + result.message);
+        errorBox.textContent = ("Ошибка: " + result.message);
+        errorBox.style.display = "block";
       }
     } catch (error) {
-      console.error(error);
-      alert("Произошла ошибка при отправке поста.");
+      errorBox.textContent = "Произошла ошибка при отправке поста.";
+      errorBox.style.display = "block";
     }
   });
 });
+

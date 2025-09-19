@@ -1,5 +1,8 @@
 <?php
 
+//to do SQL injection safety
+
+
 const DB_HOST = '127.0.0.1';
 const DB_NAME = 'blog';
 const DB_USER = 'blog_user';
@@ -117,6 +120,12 @@ function getUserByEmail(PDO $connection, string $email): ?array {
     return $statement->fetch(PDO::FETCH_ASSOC) ?: null;
 }
 
+function getUserDataByUserId(PDO $connection, int $userId): ?array {
+    $statement = $connection->prepare("SELECT name, email FROM user WHERE user_id = ?");
+    $statement->execute([$userId]);
+    return $statement->fetch(PDO::FETCH_ASSOC) ?: null;
+} 
+
 function saveUser(PDO $connection, string $name, string $surname, string $email, string $passwordHash, ?string $aboutMe, ?string $avatarPath): bool {
     $statement = $connection->prepare("
         INSERT INTO user (name, surname, email, password_hash, about_me, avatar) 
@@ -179,12 +188,88 @@ function getLikeCount(PDO $connection, $postId): int {
     return (int)$statement->fetchColumn();
 }
 
-function isLikedByUser(PDO $connection, int $userId, int $postId): bool {
+function isLikedByUser(PDO $connection, ?int $userId, int $postId): bool {
     if (!$userId) {
         return false;
     }
     $statement = $connection->prepare("SELECT 1 FROM post_like WHERE post_id = ? AND user_id = ?");
     $statement->execute([$postId, $userId]);
     return (bool)$statement->fetchColumn();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+function getPostByPostId(PDO $connection, int $postId): ?array {
+    $postQuery = <<<SQL
+        SELECT
+            p.post_id, p.user_id, p.content, p.created_at, pi.image_path
+        FROM 
+            post p
+        LEFT JOIN 
+            post_image pi ON p.post_id = pi.post_id
+        WHERE
+            p.post_id = :post_id
+        ORDER BY
+            pi.image_id ASC
+    SQL;
+
+    $statement = $connection->prepare($postQuery);
+    $statement->execute([':post_id' => $postId]);
+    $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!$rows) {
+        return null;
+    }
+
+    $post = [
+        'post_id' => $rows[0]['post_id'],
+        'userId' => $rows[0]['user_id'],
+        'content' => $rows[0]['content'],
+        'created_at' => $rows[0]['created_at'],
+        'images' => [],
+    ];
+
+    foreach ($rows as $row) {
+        if (!empty($row['image_path'])) {
+            $post['images'][] = $row['image_path'];
+        }
+    }
+
+    return $post;
+}
+
+function updatePostInDb(PDO $connection, int $postId, string $content, array $filenames): bool {
+    $connection->beginTransaction();
+    try {
+        // 1. Обновляем текст поста
+        $stmt = $connection->prepare("UPDATE post SET content = :content WHERE post_id = :post_id");
+        $stmt->execute([':content' => $content, ':post_id' => $postId]);
+
+        // 2. Получаем текущие изображения из БД
+        $stmtOld = $connection->prepare("SELECT image_path FROM post_image WHERE post_id = :post_id ORDER BY image_id ASC");
+        $stmtOld->execute([':post_id' => $postId]);
+        $oldImages = $stmtOld->fetchAll(PDO::FETCH_COLUMN);
+
+        // 3. Определяем изображения, которые нужно удалить
+        $imagesToDelete = array_diff($oldImages, $filenames);
+        if (!empty($imagesToDelete)) {
+            $placeholders = implode(',', array_fill(0, count($imagesToDelete), '?'));
+            $deleteStmt = $connection->prepare("DELETE FROM post_image WHERE post_id = ? AND image_path IN ($placeholders)");
+            $deleteStmt->execute(array_merge([$postId], $imagesToDelete));
+        }
+
+        // 4. Определяем новые изображения для вставки
+        $imagesToAdd = array_diff($filenames, $oldImages);
+        $stmtImg = $connection->prepare("INSERT INTO post_image (post_id, image_path) VALUES (:post_id, :image_path)");
+        foreach ($imagesToAdd as $filename) {
+            $stmtImg->execute([':post_id' => $postId, ':image_path' => $filename]);
+        }
+
+        $connection->commit();
+        return true;
+    } catch (PDOException $e) {
+        $connection->rollBack();
+        return false;
+    }
 }
 ?>

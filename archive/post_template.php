@@ -19,10 +19,18 @@
                 <div class="head__name">Удаленный пользователь</div>
             <?php endif; ?>
         </a>
-        <!-- Кнопка "Написать" -->
-        <button class="head__write-button">
-            <img src="images/write.svg" alt="Написать" title="Написать">
-        </button>
+        <!-- Кнопка "Редактировать пост" -->
+        <?php if (isset($currentUserId) && $currentUserId === $post['userId']): ?>
+            <button class="head__edit-button" onclick="location.href='create_post.php?id=<?= $post['post_id'] ?>'">
+                <img src="images/write.svg" alt="Редактировать" title="Редактировать">
+            </button>
+        <?php endif; ?>
+        <!-- Кнопка "Удалить пост" -->
+        <?php if (isset($currentUserId) && $currentUserId === $post['userId']): ?>
+            <button class="head__delete-button">
+                <img src="images/delete-grey.svg" alt="Удалить" title="Удалить">
+            </button>
+        <?php endif; ?>
     </div>
     <!-- Галерея -->
     <?php if (!empty($images)): ?>
@@ -64,5 +72,5 @@
         <button class="post__more-button">ещё</button>
     </div>
     <!-- Дата поста -->
-    <span class="post__date"><?= htmlspecialchars(showData($post["created_at"] ?? time())) ?></span>
+    <span class="post__date"><?= htmlspecialchars(showData($post["created_at"])) ?></span>
 </div>

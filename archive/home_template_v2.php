@@ -1,36 +1,21 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8"> 
     <title>Главная страница</title>
     <link rel="stylesheet" type="text/css" href="css/home.css">
     <link rel="stylesheet" type="text/css" href="css/font.css">
-    <script src="js/home_template.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
+    <script src="js/menu.js" defer></script>
+    <script> const currentUserId = <?= json_encode($currentUserId) ?>; </script>
+    <script src="js/post_template.js" defer></script>
+    <!--<script src="js/home_template.js" defer></script> -->
 </head>
-
 <body>
     <div class="container">
-        <div class="menu">
-            <header class="menu__header"></header>
-            <a href="http://localhost/home.php" class="menu__link">
-                <span class="menu__icon menu__icon_type_home"></span>
-            </a>
-            <a href="<?php echo $userId ? "profile.php?id=$userId" : "login.html"; ?>" class="menu__link">
-                <span class="menu__icon menu__icon_type_profile"></span>
-            </a>
-            <a href="<?php echo $userId ? "create_post.php" : "login.html"; ?>" class="menu__link">
-                <span class="menu__icon menu__icon_type_plus"></span>
-            </a>
-        </div>
+        <?php include 'menu.php'; ?>
         <div class="scroll">
-            <?php foreach ($posts as $post): 
-                $authorName = $post["name"];
-                $authorSurname = $post["surname"];
-                $authorAvatar = $post["avatar"];
-                $images = $post["images"] ?? [];
-                include 'post_template.php'; 
-            endforeach; ?>
+            <!-- Отрисовка постов js -->
         </div>
     </div>
     <!-- Модальное окно -->
@@ -54,6 +39,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> 
 </body>
 </html>

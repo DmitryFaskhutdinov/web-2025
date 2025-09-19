@@ -9,37 +9,6 @@
     display: flex;
 }
 
-/* боковое меню */
-.menu {
-    border-right: 1px solid #2222220D;
-    width: 72px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.menu__header {
-    height: 30px;
-}
-
-.menu__icon {
-    width: 40px;
-    height: 40px;
-    display: block;
-}
-
-.menu__icon_type_home {
-    background-image: url("/images/home.svg");
-}
-
-.menu__icon_type_profile {
-    background-image: url("/images/profile.svg");
-}
-
-.menu__icon_type_plus {
-    background-image: url("/images/plus.svg");
-}
-
 /* Лента постов */
 .scroll {
     display: flex;
@@ -52,9 +21,11 @@
 
 /* шапка поста */
 .head {
+    position: relative;
     display: flex;
     align-items: center;
     margin-bottom: 5px;
+    width: 100%;
 
 }
 
@@ -84,12 +55,21 @@
     font: 500 14px/1.28 "Golos UI", sans-serif;
 }
 
-.head__write-button {
+.head__edit-button {
     border: none;
     background: none;
     margin-left: auto;
     padding: 0;
     cursor: pointer;
+}
+
+.head__delete-button {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    transform: scale(1.2);
+    left: 0;
 }
 
 /* Галлерея поста */

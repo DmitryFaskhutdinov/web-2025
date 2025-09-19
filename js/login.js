@@ -1,49 +1,60 @@
-// показать/скрыть пароль
-const passInput = document.querySelector(".login__pass-box");
-const eyeButton = document.querySelector(".login__eye-button");
-const eyeOff = document.querySelector(".login__eye-img--off");
-const eyeOn = document.querySelector(".login__eye-img--on");
+function initTogglePassword(tougleBtn, passBox, ImgOff, ImgOn) {
+    const eyeButton = document.querySelector(tougleBtn);
+    const passInput = document.querySelector( passBox);
+    const eyeOff = document.querySelector(ImgOff);
+    const eyeOn = document.querySelector(ImgOn);
 
-if (eyeButton) {
+    if (!eyeButton || !passInput || !eyeOff || !eyeOn) return;
+
     eyeButton.addEventListener('click', () => {
-        if (passInput.type === "password") {
-            passInput.type = "text";
-            eyeOff.style.display = "none";
-            eyeOn.style.display = "block";
-        } else {
-            passInput.type = "password";
-            eyeOff.style.display = "block";
-            eyeOn.style.display = "none";
-        }
-    })
+        const isPassword = passInput.type === "password";
+        passInput.type = isPassword ? "text" : "password";
+        eyeOff.style.display = isPassword ? "none" : "block";
+        eyeOn.style.display = isPassword ? "block" : "none";
+    });
 }
+
+initTogglePassword(
+    ".login__eye-button",
+    ".login__pass-box",
+    ".login__eye-img--off",
+    ".login__eye-img--on"
+);
+
 // логин-запрос
 const form = document.querySelector('.login__form');
+const errorBox = form.querySelector('.login__error-box');
+const inputInfo = form.querySelector('.login__input-info');
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+form.email.addEventListener('input', () => errorBox.classList.remove('show'));
+form.password.addEventListener('input', () => errorBox.classList.remove('show'));
+
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const email = form.email.value;
-    const password = form.password.value;
-    const errorBox = form.querySelector('.login__error-box');
-    const inputInfo = form.querySelector('.login__input-info');
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const email = form.email.value.trim();
+    const password = form.password.value.trim();
 
     form.email.classList.remove('error');
     form.password.classList.remove('error');
-    errorBox.style.display = 'none';
-    errorBox.textContent = '';
     inputInfo.classList.remove('error');
 
+    errorBox.textContent = '';
+    errorBox.classList.remove('show');
 
     if (!email || !password) {
         errorBox.textContent = "🤓 Поля обязательные";
-        errorBox.style.display = 'block';
+        errorBox.classList.add('show');
+
         form.email.classList.add('error');
         form.password.classList.add('error');
         return;
+
     } else if (!emailPattern.test(email)) {
         errorBox.textContent = "🤓 Неверный формат электропочты";
-        errorBox.style.display = 'block';
+        errorBox.classList.add('show');
+
         form.email.classList.add('error');
         inputInfo.classList.add('error');
         return;
@@ -56,10 +67,10 @@ form.addEventListener('submit', async (event) => {
 
     const result = await response.json();
     if (result.status === 'ok') {
-        window.location.href = 'home.php';
+        window.location.href = `profile.php?id=${result.user_id}`;
     } else {
         errorBox.textContent = "🤥 " + result.message; 
-        errorBox.style.display = 'block';
+        errorBox.classList.add('show');
 
         form.email.classList.add('error');
         form.password.classList.add('error');
@@ -68,3 +79,6 @@ form.addEventListener('submit', async (event) => {
 });
 
 // to do: проверка пароля на допустимые символы и минимальную длину
+// to do: блокировка повторных попыток
+// to do: response.ok проверить
+// to do: обработать потенциально пустой result.user_id

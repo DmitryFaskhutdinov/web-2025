@@ -1,5 +1,9 @@
 <?php 
 
+//to do: unite functions related to images
+//to do: check allowed chars
+//to do: sha1
+
 const IMAGE_EXT = '.png';
 const TITLE_MAX_LENGTH = 255;
 const IMAGE_MAX_LENGTH = 50;
@@ -8,7 +12,7 @@ const IMAGE_TYPES = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image
 const IMAGE_SIZE = 1024 * 1024;
 
 function validateTitle(string $title): bool {
-    $isValidChars = preg_match('/^[\p{L}\d\s.,!?"«»:—\-()]+$/u', $content);
+    $isValidChars = preg_match('/^[\p{L}\d\s.,!?"«»:—\-()]+$/u', $title);
     $isValidLength = mb_strlen($title) <= TITLE_MAX_LENGTH;
     return $isValidChars && $isValidLength;
 }
@@ -36,16 +40,5 @@ function generateImageName(string $title): string {
     }
     $randomPart = substr(sha1(string: $title . time()), offset: 0, length: IMAGE_MAX_RANDOM);
     return $safeTitle . '-' . $randomPart . IMAGE_EXT;
-}
-
-function isUserLoggedIn(): bool {
-    session_start();
-    return isset($_SESSION['user_id']);
-}
-
-function logoutUser(): void {
-    session_start();
-    session_unset();
-    session_destroy();
 }
 ?>

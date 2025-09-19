@@ -1,0 +1,69 @@
+/* боковое меню */
+.menu {
+    border-right: 1px solid #2222220D;
+    width: 72px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+}
+
+.menu__header {
+    height: 30px;
+}
+
+.menu__icon {
+    width: 40px;
+    height: 40px;
+    display: block;
+}
+
+.menu__icon_type_home {
+    background-image: url("/images/home-no-dot.svg");
+}
+
+.menu__icon_type_profile {
+    background-image: url("/images/profile.svg");
+}
+
+.menu__icon_type_plus {
+    background-image: url("/images/plus.svg");
+}
+
+.menu__icon_type_home.active {
+    background-image: url("/images/home.svg");
+}
+
+.menu__icon_type_profile.active {
+    background-image: url("/images/profile-dot.svg");
+}
+
+.menu__icon_type_plus.active {
+    background-image: url("/images/plus-dot.svg");
+}
+
+
+.menu__icon_type_logout {
+    background-image: url("/images/logout.svg");
+}
+
+.menu__icon_type_login {
+    background-image: url("/images/login.svg");
+}
+
+.menu__icon_type_register {
+    background-image: url("/images/register.svg");
+}
+
+.menu__icon_type_user {
+    font: 400 18px "Golos UI", sans-serif;
+    color: white; 
+    background-color: grey;
+    width: 24px;
+    height: 24px;  
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;   
+    align-items: center;
+    user-select: none;
+}

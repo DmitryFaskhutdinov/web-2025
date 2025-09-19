@@ -145,15 +145,25 @@
 
 .login__error-box {
     width: 100%;
-    border: 1px solid #F2F3F5;
-    background-color: #FFECEC;
-    border-radius: 10px;
-    padding: 15px 12px;
     font: 400 15px/1.2 "Golos UI", sans-serif;
-    transition: border 0.3s ease;
     outline: none;
     margin-bottom: 15px;
     position: absolute;
     top: -20%;
-    display: none; 
+    display: block; 
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 12px;
+    border: 0px solid #F2F3F5;
+    background-color: #FFECEC;
+    border-radius: 10px;
+}
+
+.login__error-box.show {
+    max-height: 100px;
+    padding: 15px 12px;
+    border-radius: 10px;
+    border: 1px solid #F2F3F5;
+    background-color: #FFECEC;
 }

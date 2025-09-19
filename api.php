@@ -1,14 +1,13 @@
 <?php 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 require_once 'functions.php';
 require_once 'db.php';
 require_once 'act.php';
 
 const METHOD_POST = 'POST';
+const METHOD_GET = 'GET';
 
-if ($_SERVER['REQUEST_METHOD'] !== METHOD_POST) {
+if (($_SERVER['REQUEST_METHOD'] !== METHOD_POST) && $_SERVER['REQUEST_METHOD'] !== METHOD_GET) {
     echo getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_REQUEST_METHOD);
     die();
 }
@@ -31,8 +30,14 @@ switch ($act) {
     case ACT_LIKE:
         echo likeAction();
         break;
+    case ACT_EDIT:
+        echo editAction();
+        break;
+    case ACT_RENDER:
+        echo getPosts();
+        break;    
     default:
         echo getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_ACT);
-        die();
+        break;
 }
 ?>

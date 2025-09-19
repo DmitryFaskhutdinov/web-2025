@@ -5,21 +5,12 @@
     <title>Профиль <?= htmlspecialchars($user["name"] . " " . $user["surname"]) ?></title>
     <link rel="stylesheet" href="css/profile.css">
     <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
+    <script src="js/menu.js" defer></script>
 </head>
 <body>
     <div class="container">
-        <div class="menu">
-            <header class="menu__header"></header>
-            <a href="home.php" class="menu__link">
-                <span class="menu__icon menu__icon_type_home"></span>
-            </a>
-            <a href="<?php echo $currentUserId ? "profile.php?id=$currentUserId" : "login.html"; ?>" class="menu__link">
-                <span class="menu__icon menu__icon_type_profile"></span>
-            </a>
-            <a href="<?php echo $userId ? "create_post.php" : "login.html"; ?>" class="menu__link">
-                <span class="menu__icon menu__icon_type_plus"></span>
-            </a>
-        </div>
+        <?php include 'menu.php'; ?>
         <div class="content">
             <!-- Аватар -->
             <div class="content__frame">

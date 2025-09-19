@@ -5,20 +5,26 @@ const ACT_REGISTER = 'register';
 const ACT_LOGIN = 'login';
 const ACT_LOGOUT ='logout';
 const ACT_LIKE = 'like';
+const ACT_EDIT = 'edit';
+const ACT_RENDER = 'render';
 
 const STATUS_ERROR = 'error';
 const STATUS_OK = 'ok';
 
-const MESSAGE_INVALID_REQUEST_METHOD = 'invalid method';
-const MESSAGE_INVALID_ACT = 'invalid act';
+const MESSAGE_INVALID_REQUEST_METHOD = 'method не валиден';
+const MESSAGE_INVALID_ACT = 'act не валиден';
 
 //функция загрузки данных
 const MESSAGE_INVALID_AUTORISATION = 'Вы не авторизованы.';
 const MESSAGE_INVALID_CONTENT_REQ = 'Для создания поста необходим текст и хотя бы одна картинка.';
-const MESSAGE_INVALID_TITLE = 'invalid title';
-const MESSAGE_INVALID_IMAGE = 'invalid image';
-const MESSAGE_INVALID_SAVE_IMAGE = 'invalid save image';
-const MESSAGE_INVALID_SAVE_DB_IMAGE = 'invalid save db image';
+const MESSAGE_INVALID_TITLE = 'Текст содержит недопустимые символы';
+const MESSAGE_INVALID_IMAGE = 'Недопустимое изображение';
+const MESSAGE_INVALID_SAVE_IMAGE = 'Ошибка сохранения изображения. Попробуйте позже.';
+const MESSAGE_INVALID_SAVE_DB_IMAGE = 'Не удалось сохранить пост. Попробуйте позже.';
+
+//функция редактирования поста
+const MESSAGE_INVALID_POST = "Пост не найден";
+const MESSAGE_INVALID_EDIT_REQUEST = "Вы не можете редактировать этот пост";
 
 //функция регистрации
 const MESSAGE_INVALID_PASSWORDS = 'Пароли не совпадают';
@@ -32,7 +38,7 @@ const MESSAGE_INVALID_FIELDS = 'Поля не заполнены';
 const MESSAGE_INVALID_MAIL_OR_PASS = 'Неверный email или пароль';
 
 // лайки
-const MESSAGE_INVALID_POST_ID = 'post_id is required';
+const MESSAGE_INVALID_POST_ID = 'post_id обязателен';
 
 function getResponse(string $status, string $message): string {
     $response = [
@@ -42,19 +48,38 @@ function getResponse(string $status, string $message): string {
     return json_encode($response);
 }
 
-function ensureSession() {
+function authBySession(PDO $connection): array {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
+
+    $userId = $_SESSION['user_id'] ?? null;
+    if (!$userId) {
+        http_response_code(401);
+        echo getResponse(STATUS_ERROR, MESSAGE_INVALID_AUTORISATION );
+        die();
+    }
+
+    $statement = $connection->prepare("SELECT * FROM user WHERE user_id = ?");
+    $statement->execute([$userId]);
+    $user = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        http_response_code(401);
+        echo getResponse(STATUS_ERROR, MESSAGE_INVALID_AUTORISATION ); 
+        die();
+    }
+
+    return $user;
 }
 
 function uploadData(): string {
-    ensureSession();
-    $userId = $_SESSION['user_id'] ?? null;
-
-    if (!$userId) {
-        return getResponse(STATUS_ERROR, MESSAGE_INVALID_AUTORISATION );
+    $connection = connectToDb();
+    if (!$connection) {
+        return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_DB_CONNECTION);
     }
+    $user = authBySession($connection);
+    $userId = $user['user_id'];
 
     $jsonInput = $_POST['json'] ?? '';
     $data = json_decode($jsonInput, true);
@@ -97,7 +122,6 @@ function uploadData(): string {
         }
     }
 
-    $connection = connectToDb();
     $isSuccess = savePostToDb($connection, $userId, $content, $filenames);
     if (!$isSuccess) {
         return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_SAVE_DB_IMAGE);
@@ -106,8 +130,77 @@ function uploadData(): string {
     return getResponse(status: STATUS_OK, message: '');
 }
 
-function registerUser(): string {
+function editAction(): string {
+    $connection = connectToDb();
+    if (!$connection) {
+        return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_DB_CONNECTION);
+    }
+    $user = authBySession($connection);
+    $userId = $user['user_id'];
+
+    $jsonInput = $_POST['json'] ?? '';
+    $data = json_decode($jsonInput, true);
+    $postId = $data['post_id'] ?? null;
+
+    if (!$postId || !is_numeric($postId)) {
+        return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_POST_ID);
+    }
+    $postId = (int)$postId;
+
+    $existingPost = getPostByPostId($connection, $postId);
+    if (!$existingPost) {
+        return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_POST);
+    }
+    if ($existingPost['userId'] !== $userId) {
+        return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_EDIT_REQUEST);
+    }
+
+
+    $content = isset($data['content']) ? trim($data['content']) : ''; 
+
+    $filenames = $existingPost['images'] ?? [];
+
+    if ($content === '' && empty($filenames)) {
+        return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_CONTENT_REQ);
+    }
     
+    if (!validateTitle($content)) {
+        return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_TITLE);
+    }
+
+    $hasImages = hasValidImages();
+    if ($hasImages) {
+        foreach ($_FILES['image']['error'] as $key => $error) {
+
+            $type = $_FILES['image']['type'][$key];
+            $size = $_FILES['image']['size'][$key];
+
+            if (!validateImage($type, $size)) {
+                return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_IMAGE);
+            }
+
+            $tmpName = $_FILES['image']['tmp_name'][$key];
+            $originalName = $_FILES['image']['name'][$key];
+
+            $filename = generateImageName($originalName);
+            $filenames[] = $filename;
+
+            $isSuccess = move_uploaded_file($tmpName, 'images/' . $filename);
+            if (!$isSuccess) {
+                return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_SAVE_IMAGE);
+            }
+        }
+    }
+
+    $isSuccess = updatePostInDb($connection, $postId, $content, $filenames);
+    if (!$isSuccess) {
+        return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_SAVE_DB_IMAGE);
+    }
+
+    return getResponse(status: STATUS_OK, message: '');
+}
+
+function registerUser(): string {
     $connection = connectToDb();
     if (!$connection) {
         return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_DB_CONNECTION);
@@ -172,49 +265,53 @@ function loginUser() {
     $password = $_POST['password'] ?? '';
 
     if ($email === '' || $password === '') {
+        http_response_code(401);
         return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_FIELDS);
     }
 
     $user = getUserByEmail($connection, $email);
 
-    if ($user === null) {
+    if ($user === null || !password_verify($password, $user['password_hash'])) {
+        http_response_code(401);
         return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_MAIL_OR_PASS);
     }
 
-    if (!password_verify($password, $user['password_hash'])) {
-        return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_MAIL_OR_PASS);
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
     }
-
-    ensureSession();
     $_SESSION['user_id'] = $user['user_id'];
 
-    return getResponse(status: STATUS_OK, message: '');
+    http_response_code(200);
+    return json_encode([
+        'status' => STATUS_OK,
+        'message' => '',
+        'user_id' => $user['user_id']
+    ]);
 }
 
 
 function logoutAction(): string {
-    logoutUser(); // Функция уже есть в functions.php, нужно подумать над структурой проекта
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    session_unset();
+    session_destroy();
     return getResponse(status: STATUS_OK, message: '');
 }
 
 function likeAction(): string {
-    ensureSession();
-    $userId = $_SESSION['user_id'] ?? null;
-    if ($userId === null) {
-        return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_AUTORISATION );
+    $connection = connectToDb();
+    if (!$connection) {
+        return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_DB_CONNECTION);
     }
+    $user = authBySession($connection);
+    $userId = $user['user_id'];
 
     $postId = $_POST['post_id'] ?? null;
     if ($postId === null || !is_numeric($postId)) {
         return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_POST_ID); // 'post_id is required'
     }
     $postId = (int)$postId;
-    
-
-    $connection = connectToDb();
-    if (!$connection) {
-        return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_DB_CONNECTION);
-    }
 
     $isLiked = switchLike($connection, $userId, $postId);
     $likeCount = getLikeCount($connection, $postId);
@@ -224,6 +321,26 @@ function likeAction(): string {
         'message' => '',
         'liked' => $isLiked,
         'likes' => $likeCount
+    ]);
+}
+
+function getPosts(): string {
+    $connection = connectToDb();
+    if (!$connection) {
+        return getResponse(status: STATUS_ERROR, message: MESSAGE_INVALID_DB_CONNECTION);
+    }  
+
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    $userId = $_SESSION['user_id'] ?? null;
+    
+    $postsData = getPostFromDb($connection, $userId);
+
+    return json_encode([
+        'status' => STATUS_OK,
+        'message' => '',
+        'posts' => $postsData
     ]);
 }
 ?>

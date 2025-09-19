@@ -1,15 +1,3 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-date_default_timezone_set('Europe/Moscow');
-require_once 'db.php';
-
-$connection = connectToDb();
-$currentUserId = $_SESSION['user_id'] ?? 0;
-$posts = getPostFromDb($connection, $currentUserId);
-?>
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -19,14 +7,22 @@ $posts = getPostFromDb($connection, $currentUserId);
     <link rel="stylesheet" type="text/css" href="css/font.css">
     <link rel="stylesheet" type="text/css" href="css/menu.css">
     <script src="js/menu.js" defer></script>
-    <script> const currentUserId = <?= json_encode($currentUserId) ?>; </script>
-    <script src="js/home.js" defer></script>
+    <script src="js/home_template.js" defer></script>
 </head>
 <body>
     <div class="container">
         <?php include 'menu.php'; ?>
-        <div class="scroll"><!-- Отрисовка постов js --></div>
+        <div class="scroll">
+            <?php foreach ($posts as $post): 
+                $authorName = $post["name"];
+                $authorSurname = $post["surname"];
+                $authorAvatar = $post["avatar"];
+                $images = $post["images"] ?? [];
+                include 'post_template.php'; 
+            endforeach; ?>
+        </div>
     </div>
+    <!-- Модальное окно -->
     <div class="modal" id="Modal">
         <div class="modal__window">
             <div class="modal__image-container">
@@ -42,9 +38,11 @@ $posts = getPostFromDb($connection, $currentUserId);
                 <button class="modal__button modal__prev-image">
                     <img src="images/Arrow-left 10.svg" alt="Листать" title="Листать">
                 </button>
-                <div class="modal__indicator"></div>
+                <div class="modal__indicator">
+                    <?= "1 из " . count($images) ?>
+                </div>
             </div>
         </div>
-    </div> 
+    </div>
 </body>
 </html>
